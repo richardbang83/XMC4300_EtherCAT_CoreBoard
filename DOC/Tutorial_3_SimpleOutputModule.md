@@ -1,9 +1,9 @@
-Simple output module
+## Simple output module
 After being familiar with DEMO and running, we need to plan for practical applications. Here we take a 24V 16-channel NPN output module as an example (optocoupler or ULN2803 output).
 
 If you copy the DEMO project directly, you need to modify the .project file under the project folder, modify the name tag and the entire folder name and then import it from the dave software.
 
-ESC section
+## ESC section
 1. Use excel to edit /SSC/XMC_ESC.xlsx, modify DATA (remove INPUT, and keep a 0x01 UINT OUT_GENERIC as output.
 
 2. Use SSC TOOLS to edit /SSC/XMC_ESC.esp, modify Vendor id, Product Code, Device Name and other information
@@ -14,7 +14,7 @@ ESC section
 
 5. Unzip Patch.zip to the current directory and overwrite it.
 
-ESC modification
+## ESC modification
 Since this slave only has output, you need to modify the slave application.
 
 1. Edit /SSC/src/XMC_ESC.c to shield 226 lines (because there is no IN_GENERIC, so there is no TxPDO, the InputSize is 0.
@@ -25,7 +25,7 @@ Since this slave only has output, you need to modify the slave application.
 
 4. Modify process_app in lines 290 and 293 to remove TOBJ6000 *IN_GENERIC for the same reason as above.
 
-Main program modification
+## Main program modification
 1. Initialize the relevant pins in Init_GPIO. I also added .output_Strength=XMC_GPIO_OUTPUT_STRENGTH_WEAK. The weak drive capability seems to be helpful for heat dissipation.
 
 2. Modify the definition of process_app and remove IN_GENERIC.
@@ -34,5 +34,5 @@ Main program modification
 
 (Shift OUT_GENERIC.OUT by 2, that is, get bit2 as the last bit, and sum the gate with outenable (0x0 or 0x1). Editing the mapping mapping can be pulled out in EXCEL, which is more convenient)
 
-Debug and download
+## Debug and download
 If you have programmed other Vendor id or product id programs before, please use jlink commander to erase them manually. These contents are stored in EEPROM and may not be erased completely when downloading.
